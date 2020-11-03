@@ -2,14 +2,26 @@
   "pluginAlias": "TostCorp",
   "pluginType": "platform",
   "singular": true,
+  "headerDisplay":"TostCorp RTS box configuration",
   "schema": {
     "type": "object",
     "properties": {
-      "name": {
-        "title": "Name",
+      "mqttIP": {
+        "title": "MQTT IP Address / Hostname",
         "type": "string",
         "required": true,
-        "default": "Example Dynamic Platform"
+        "format": "hostname",
+        "default": "localhost"
+      },
+      "mqttUserName":{
+        "title": "MQTT Username",
+        "type": "string",
+        "required": false
+      },
+      "mqttUserPassword":{
+        "title": "MQTT  user password",
+        "type": "string",
+        "required": false
       }
     }
   }
