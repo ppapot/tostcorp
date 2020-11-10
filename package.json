@@ -2,7 +2,7 @@
   "private": true,
   "displayName": "TostCorp RTS",
   "name": "homebridge-TostCorp-RTS",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "integrqte the RTS TosCorp box to operate somfy blinds",
   "license": "Apache-2.0",
   "repository": {
