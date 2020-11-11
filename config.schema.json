@@ -11,17 +11,19 @@
         "type": "string",
         "required": true,
         "format": "hostname",
-        "default": "localhost"
+        "default": "mqtt://192.168.1.7"
       },
       "mqttUserName":{
         "title": "MQTT Username",
         "type": "string",
-        "required": false
+        "required": false,
+        "default":"tost"
       },
       "mqttUserPassword":{
         "title": "MQTT  user password",
         "type": "string",
-        "required": false
+        "required": false,
+        "default": "123tost"
       }
     }
   }

@@ -23,11 +23,49 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
     public readonly api: API,
   ) {
     this.log.debug('Finished initializing platform:', this.config.name);
+    
+    const myOptions = {
+      keepalive: 10,
+      clientId: this.config.mqttUserName,
+      protocolId: 'MQTT',
+      protocolVersion: 4,
+      clean: true,
+      reconnectPeriod: 1000,
+      connectTimeout: 30 * 1000,
+      will: {
+        topic: 'status',
+        payload: 'homebridge connexion has stopped',
+        qos: 0,
+        retain: false,
+      },
+      username: this.config.mqttUserName,
+      password: this.config.mqttUserPassword,
+      rejectUnauthorized: false,
+    };
+    
+    
+    const client = mqtt.connect(this.config.mqttIP, myOptions);
+    
+    client.on('connect', () => {
+      client.subscribe('somfy/somfy-remote/db', (err) => {
+        if (!err) {
+          client.publish('somfy/somfy-remote/status', 'Homebridge connected');
+          this.log.info('toscorp connected to mqtt server');
+        }
+      });
+    });
+
+    client.on('message', (topic, message) => {
+      this.log.info('retrieved from de DataBase:', message.toString());
+      
+
+    });
 
     // When this event is fired it means Homebridge has restored all cached accessories from disk.
     // Dynamic Platform plugins should only register new accessories after this event was fired,
     // in order to ensure they weren't added to homebridge already. This event can also be used
     // to start discovery of new accessories.
+
     this.api.on('didFinishLaunching', () => {
       log.debug('Executed didFinishLaunching callback');
       // run the method to discover / register your devices as accessories
@@ -56,42 +94,11 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
     // EXAMPLE ONLY
     // A real plugin you would discover accessories from the local network, cloud services
     // or a user-defined array in the platform config.
-    
-    const myOptions = {
-      keepalive: 10,
-      clientId: 'tost',
-      protocolId: 'MQTT',
-      protocolVersion: 4,
-      clean: true,
-      reconnectPeriod: 1000,
-      connectTimeout: 30 * 1000,
-      will: {
-        topic: 'status',
-        payload: 'homebridge connexion has stopped',
-        qos: 0,
-        retain: false,
-      },
-      username: 'tost',
-      password: '123tost',
-      rejectUnauthorized: false,
-    };
-    
-    
-    const client = mqtt.connect('mqtt://192.168.1.7', myOptions);
-    
-    client.on('connect', () => {
-      client.subscribe('somfy/somfy-remote/db', (err) => {
-        if (!err) {
-          client.publish('somfy/somfy-remote/status', 'Homebridge connected');
-          this.log.info('toscorp connected to mqtt server');
-        }
-      });
-    });
 
-    client.on('message', (topic, message) => {
-      this.log.info('retreived from de DataBase:', message.toString());
-    });
+    
+    
 
+    
     const exampleDevices = [
       {
         exampleUniqueId: '1',
