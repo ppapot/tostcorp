@@ -1,24 +1,9 @@
 import { Service, PlatformAccessory, CharacteristicValue, CharacteristicSetCallback, CharacteristicGetCallback } from 'homebridge';
-
 import { ExampleHomebridgePlatform } from './platform';
 
-/**
- * Platform Accessory
- * An instance of this class is created for each accessory your platform registers
- * Each accessory may expose multiple services of different service types.
- */
 export class ExamplePlatformAccessory {
   private service: Service;
-
-  /**
-   * These are just used to create a working example
-   * You should implement your own code to track the state of your accessory
-   */
-  private state = {
-    lastPosition : 100,
-  };
-
- 
+  private lastPosition = 100;
 
   constructor(
     private readonly platform: ExampleHomebridgePlatform,
@@ -56,35 +41,25 @@ export class ExamplePlatformAccessory {
     // register handlers for the PositionState Characteristic
     this.service.getCharacteristic(
       this.platform.Characteristic.PositionState).updateValue(this.platform.Characteristic.PositionState.STOPPED);
- 
-    
   }
 
-  /**
-   * Handle "SET" requests from HomeKit
-   * These are sent when the user changes the state of an accessory, for example, turning on a Light bulb.
-   */
   handleTargetPositionSet(value: CharacteristicValue, callback: CharacteristicSetCallback) {
-
-    if ((value > this.state.lastPosition) || (this.state.lastPosition === 0)){
+    if ((value > this.lastPosition) || (this.lastPosition === 0)){
       this.platform.log.debug('moveup');
-      this.state.lastPosition = 100;
+      this.lastPosition = 100;
     } else {
       this.platform.log.debug('movedown');
-      this.state.lastPosition = 0;
+      this.lastPosition = 0;
     }
-
     callback(null);
   }
 
-
   handleTargetPositionGet(callback: CharacteristicGetCallback) {
-    callback(null, this.state.lastPosition);
+    callback(null, this.lastPosition);
   }
 
- 
   handleCurrentPositionGet(callback: CharacteristicSetCallback) {
-    callback(null, this.state.lastPosition);
+    callback(null, this.lastPosition);
   }
 
 }
