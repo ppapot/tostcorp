@@ -17,7 +17,14 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
   // this is used to track restored cached accessories
   public readonly accessories: PlatformAccessory[] = [];
   _myOptions = {};
-  _myVolets = [{}];
+  _myVolets : {
+    voletUniqueId: string;
+    voletName: string;
+    voletTopic: string;
+    voletGroup: string;
+    }[] = [];
+
+  _myClient : MqttClient.Client; 
 
   constructor(
     public readonly log: Logger,
@@ -46,35 +53,21 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
     };
     
     
-    const client = MqttClient.connect(this.config.mqttIP, this._myOptions);
+    this._myClient = MqttClient.connect(this.config.mqttIP, this._myOptions);
     
-    client.on('connect', () => {
-      client.subscribe('somfy/somfy-remote/db', (err) => {
+    this._myClient.on('connect', () => {
+      this._myClient.subscribe('somfy/somfy-remote/db', (err) => {
         if (!err) {
-          client.publish('somfy/somfy-remote/status', 'Homebridge connected');
+          this._myClient.publish('somfy/somfy-remote/status', 'Homebridge connected');
           this.log.info('toscorp connected to mqtt server');
         }
       });
+
     });
     
-    function voletFactory (str) {
-      const param = str.split(':');
-      return {       
-        voletUniqueId: param[1],
-        voletName: param[2],
-        voletTopic: param[0],
-        voletGroup: param[3],
-      };
-    }
 
-    client.on('message', (topic, message) => {
-      this.log.info('retrieved from the Mqtt DataBase:', message.toString());
-      
-      const tempDbVolets = message.toString().split('::');
-      tempDbVolets.pop();
-      this._myVolets = tempDbVolets.map(x => voletFactory(x));
-      this.log.info('retrieved from Volets:', this._myVolets);
-    });
+
+
 
     // When this event is fired it means Homebridge has restored all cached accessories from disk.
     // Dynamic Platform plugins should only register new accessories after this event was fired,
@@ -84,7 +77,22 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
     this.api.on('didFinishLaunching', () => {
       log.debug('Executed didFinishLaunching callback');
       // run the method to discover / register your devices as accessories
-      this.discoverDevices();
+      
+      this._myClient.on('message', (topic, message) => {
+        const tempDbVolets = message.toString().split('::');
+        tempDbVolets.pop();
+        function voletFactory (str) {
+          const param = str.split(':');
+          return {       
+            voletUniqueId: param[1],
+            voletName: param[2],
+            voletTopic: param[0],
+            voletGroup: param[3],
+          };
+        }
+        this._myVolets = tempDbVolets.map(x => voletFactory(x));
+        this.discoverDevices();
+      });
     });
   }
 
@@ -110,22 +118,8 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
     // A real plugin you would discover accessories from the local network, cloud services
     // or a user-defined array in the platform config.
 
-    
-    
-
-    
-    const volets = [
-      {
-        voletUniqueId: '10x223450',
-        voletName: 'bureau fenetre',
-        voletTopic: 'somfy/bureau_fenetre',
-        voletGroup: 'bureau',
-      },
-    ];
-
-
     // loop over the discovered devices and register each one if it has not already been registered
-    for (const volet of volets) {
+    for (const volet of this._myVolets) {
 
       // generate a unique id for the accessory this should be generated from
       // something globally unique, but constant, for example, the device serial
