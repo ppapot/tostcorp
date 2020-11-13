@@ -3,7 +3,7 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { ExamplePlatformAccessory } from './platformAccessory';
 
-const mqtt = require('../node_modules/mqtt');
+import MqttClient from '../node_modules/mqtt';
 
 /**
  * HomebridgePlatform
@@ -16,6 +16,8 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
 
   // this is used to track restored cached accessories
   public readonly accessories: PlatformAccessory[] = [];
+  _myOptions = {};
+  _myVolets = [{}];
 
   constructor(
     public readonly log: Logger,
@@ -24,7 +26,7 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
   ) {
     this.log.debug('Finished initializing platform:', this.config.name);
     
-    const myOptions = {
+    this._myOptions = {
       keepalive: 10,
       clientId: this.config.mqttUserName,
       protocolId: 'MQTT',
@@ -44,7 +46,7 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
     };
     
     
-    const client = mqtt.connect(this.config.mqttIP, myOptions);
+    const client = MqttClient.connect(this.config.mqttIP, this._myOptions);
     
     client.on('connect', () => {
       client.subscribe('somfy/somfy-remote/db', (err) => {
@@ -54,7 +56,7 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
         }
       });
     });
-    let dbVolets = [];
+    
     function voletFactory (str) {
       const param = str.split(':');
       return {       
@@ -70,8 +72,8 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
       
       const tempDbVolets = message.toString().split('::');
       tempDbVolets.pop();
-      dbVolets = tempDbVolets.map(x => voletFactory(x));
-      this.log.info('retrieved from Volets:', dbVolets);
+      this._myVolets = tempDbVolets.map(x => voletFactory(x));
+      this.log.info('retrieved from Volets:', this._myVolets);
     });
 
     // When this event is fired it means Homebridge has restored all cached accessories from disk.
