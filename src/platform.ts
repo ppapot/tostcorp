@@ -55,13 +55,22 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
       });
     });
     let dbVolets = [];
+    function voletFactory (str) {
+      const param = str.split(':');
+      return {       
+        voletUniqueId: param[1],
+        voletName: param[2],
+        voletTopic: param[0],
+        voletGroup: param[3],
+      };
+    }
 
     client.on('message', (topic, message) => {
       this.log.info('retrieved from the Mqtt DataBase:', message.toString());
       
       const tempDbVolets = message.toString().split('::');
       tempDbVolets.pop();
-      dbVolets = tempDbVolets.map(x => x);
+      dbVolets = tempDbVolets.map(x => voletFactory(x));
       this.log.info('retrieved from Volets:', dbVolets);
     });
 
@@ -111,6 +120,7 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
         voletGroup: 'bureau',
       },
     ];
+
 
     // loop over the discovered devices and register each one if it has not already been registered
     for (const volet of volets) {
