@@ -45,10 +45,12 @@ export class ExamplePlatformAccessory {
 
   handleTargetPositionSet(value: CharacteristicValue, callback: CharacteristicSetCallback) {
     if ((value > this.lastPosition) || (this.lastPosition === 0)){
-      this.platform.log.debug('moveup');
+      this.platform.log.debug('moveup' + this.accessory.displayName);
+      this.platform._myClient.publish(this.accessory.context.device.voletTopic, 'u');
       this.lastPosition = 100;
     } else {
-      this.platform.log.debug('movedown');
+      this.platform.log.debug('movedown'+ this.accessory.displayName);
+      this.platform._myClient.publish(this.accessory.context.device.voletTopic, 'd');
       this.lastPosition = 0;
     }
     callback(null);
