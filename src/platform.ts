@@ -3,7 +3,7 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { ExamplePlatformAccessory } from './platformAccessory';
 
-import MqttClient from '../node_modules/mqtt';
+import MqttClient from 'mqtt';
 
 /**
  * HomebridgePlatform
