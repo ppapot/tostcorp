@@ -2,7 +2,7 @@
 <p align="center">
 
 <img src="https://github.com/homebridge/branding/raw/master/logos/homebridge-wordmark-logo-vertical.png" width="150">
-<img src="./logo_tost_corp_mai_2020_V2_0_3.png" width="150">
+<img src="logo_tost_corp_mai_2020_V2_0_3.png" width="150">
 </p>
 </p>
 
