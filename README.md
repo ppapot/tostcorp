@@ -9,7 +9,7 @@
 
 # Homebridge TOSTCORP Platform Plugin
 
-This is a first TOSCORP Homebridge platform plugin and can be used to control somfy blinds thru the TOSTCORP box delivered [here](https://www.tostcorp.com/boxsomfyrts).
+This is a first TOSTCORP Homebridge platform plugin and can be used to control somfy blinds thru the TOSTCORP box delivered [here](https://www.tostcorp.com/boxsomfyrts).
 
 This plugin is developped with the help of the platform plugin template should as defined in the  [developer documentation](https://developers.homebridge.io/). 
 
@@ -69,7 +69,7 @@ at this momemnt the config.json needs to be udapte with 3 element to ensure prop
 
 In the future, I hope also to offer:
  - the MQTT server hosting in the homebridge as a plugin
- - possibility to configure the blind manually in the config.jason
+ - possibility to configure the blind manually in the config.json 
 
 ## TostCorp plugin usage
 

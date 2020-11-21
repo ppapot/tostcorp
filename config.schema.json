@@ -3,6 +3,7 @@
   "pluginType": "platform",
   "singular": true,
   "headerDisplay":"TostCorp RTS box configuration",
+  "footerDisplay": "See https://github.com/ppapot/tostcorp for more information and instructions.\n",
   "schema": {
     "type": "object",
     "properties": {
@@ -24,6 +25,39 @@
         "type": "string",
         "required": false,
         "default": "123tost"
+      },
+      "volets":{
+        "type": "array",
+        "items": {
+          "title": "volet",
+          "type":"object",
+          "properties": {
+            "voletUniqueId" : {
+              "title" : "Volet unique ID",
+              "type" : "string",
+              "required" : true,
+              "default" : "0x223550"
+            },
+            "voletName": {
+              "title" : " volet name (can be used for voice Control)",
+              "type" : "string",
+              "required" : true,
+              "default" : "bureau fenetre"
+            },
+            "voletTopic": {
+              "title" : " volet topic : represent the topic in whitch the plugin will post the command up or down",
+              "type" : "string",
+              "required" : true,
+              "default" : "somfy/bureau_fenetre"
+            },
+            "voletGroup": {
+              "title" : " volet group : represent a group name in order to order multiple blind at once (not use yet)",
+              "type" : "string",
+              "required" : true,
+              "default" : "bureau"
+            }
+          }
+        }
       }
     }
   }
