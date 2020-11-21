@@ -24,6 +24,7 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
     voletGroup: string;
     }[] = [];
 
+
   _myClient : MqttClient.Client; 
 
   constructor(
@@ -33,6 +34,8 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
   ) {
     this.log.debug('Finished initializing platform:', this.config.name);
     
+  
+
     this._myOptions = {
       keepalive: 10,
       clientId: this.config.mqttUserName,
@@ -81,17 +84,27 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
       this._myClient.on('message', (topic, message) => {
         const tempDbVolets = message.toString().split('::');
         tempDbVolets.pop();
-        function voletFactory (str) {
+        const voletFactory = (str) => {
           const param = str.split(':');
+          this.log.info('Loading accessory from MQTT:', param[2]);
           return {       
             voletUniqueId: param[1],
             voletName: param[2],
             voletTopic: param[0],
-            voletGroup: param[3],
+            voletGroup: param[3],         
           };
-        }
+        };
         this._myVolets = tempDbVolets.map(x => voletFactory(x));
         this.discoverDevices();
+        console.log(this.config.volets);
+        // for (const volet of this.config.volets) {
+        //   if (this._myVolets.indexOf(volet) === -1) {
+        //     this._myVolets.push(volet);
+        //     this.log.info('loading an adding from config.json: ', volet.voletName);
+        //   } else {
+        //     this.log.info('loading but duplicate from config.json: ', volet.voletName);
+        //   }
+        // }
       });
     });
   }

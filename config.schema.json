@@ -28,6 +28,7 @@
       },
       "volets":{
         "type": "array",
+        "required" : false,
         "items": {
           "title": "volet",
           "type":"object",
