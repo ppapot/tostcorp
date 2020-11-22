@@ -5,7 +5,7 @@ export class ExamplePlatformAccessory {
   private service: Service;
   private lastPosition = 100;
   private moving = false;
-  private duration = 10;
+  private duration = 10000; // default time in ms for the blinds to make a complete move if acction during this move consider as stop
 
   constructor(
     private readonly platform: ExampleHomebridgePlatform,
