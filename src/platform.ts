@@ -99,7 +99,7 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
         for (const volet of <{voletUniqueId: string; voletName: string; voletTopic: string; voletGroup: string}[] > this.config.volets) {
           if (this._myVolets.indexOf(volet) === -1) {
             this._myVolets.push(volet);
-            this.log.info('loading an adding from config.json: ', volet.voletName);
+            this.log.info('loading and adding from config.json: ', volet.voletName);
           } else {
             this.log.info('loading but duplicate from config.json: ', volet.voletName);
           }

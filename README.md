@@ -68,12 +68,17 @@ at this momemnt the config.json needs to be udapte with 3 element to ensure prop
 ```
 
 In the future, I hope also to offer:
- - the MQTT server hosting in the homebridge as a plugin
- - possibility to configure the blind manually in the config.json 
+ - the MQTT server hosting in the homebridge as a plugin 
+ - possibility to configure the blind manually in the config.json (ongoing)
 
 ## TostCorp plugin usage
 
 once the plugin creates dynamiquely the blinds, within the IOS Home application, you can push once to genrate a up command the next psuh will be a down command.
 There is no feedback from the blind to tell the position (somfy RTS limitation), I alternate status between the completely close or open with each push.
 
-in the future i will try to generate a stop action if we push on the blind within the 5s and consider the blind to be at 50% the following push will generate a up
+in the future i will try to generate a stop action if we push on the blind within the 10s and consider the blind to be at value of the inital movement the following push will generate a opposite movement. the following sequence should be fine:
+- up => stop (within 10s) => down 
+- down => stop (within 10s) => up
+- up => down (after 10s)
+- down => up (after 10s) 
+

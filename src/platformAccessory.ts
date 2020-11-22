@@ -4,6 +4,8 @@ import { ExampleHomebridgePlatform } from './platform';
 export class ExamplePlatformAccessory {
   private service: Service;
   private lastPosition = 100;
+  private moving = false;
+  private duration = 10;
 
   constructor(
     private readonly platform: ExampleHomebridgePlatform,
@@ -44,14 +46,21 @@ export class ExamplePlatformAccessory {
   }
 
   handleTargetPositionSet(value: CharacteristicValue, callback: CharacteristicSetCallback) {
-    if ((value > this.lastPosition) || (this.lastPosition === 0)){
+    if (this.moving) {
+      this.platform.log.debug('stop' + this.accessory.displayName);
+      this.platform._myClient.publish(this.accessory.context.device.voletTopic, 's');
+    } else if ((value > this.lastPosition) || (this.lastPosition === 0)){
       this.platform.log.debug('moveup' + this.accessory.displayName);
       this.platform._myClient.publish(this.accessory.context.device.voletTopic, 'u');
       this.lastPosition = 100;
+      this.moving = true;
+      setTimeout(()=> this.moving = false, this.duration);
     } else {
       this.platform.log.debug('movedown'+ this.accessory.displayName);
       this.platform._myClient.publish(this.accessory.context.device.voletTopic, 'd');
       this.lastPosition = 0;
+      this.moving = true;
+      setTimeout(()=> this.moving = false, this.duration);
     }
     callback(null);
   }
