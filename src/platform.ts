@@ -96,15 +96,14 @@ export class ExampleHomebridgePlatform implements DynamicPlatformPlugin {
         };
         this._myVolets = tempDbVolets.map(x => voletFactory(x));
         this.discoverDevices();
-        console.log(this.config.volets);
-        // for (const volet of this.config.volets) {
-        //   if (this._myVolets.indexOf(volet) === -1) {
-        //     this._myVolets.push(volet);
-        //     this.log.info('loading an adding from config.json: ', volet.voletName);
-        //   } else {
-        //     this.log.info('loading but duplicate from config.json: ', volet.voletName);
-        //   }
-        // }
+        for (const volet of <{voletUniqueId: string; voletName: string; voletTopic: string; voletGroup: string}[] > this.config.volets) {
+          if (this._myVolets.indexOf(volet) === -1) {
+            this._myVolets.push(volet);
+            this.log.info('loading an adding from config.json: ', volet.voletName);
+          } else {
+            this.log.info('loading but duplicate from config.json: ', volet.voletName);
+          }
+        }
       });
     });
   }

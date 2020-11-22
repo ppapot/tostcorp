@@ -61,5 +61,19 @@
         }
       }
     }
+  },
+  "layout": {
+    "key": "volets",
+    "type": "array",
+    "name": " ",
+    "description": "Provide the details of your blinds.",
+    "orderable": true,
+    "buttonText": "Add Blind",
+    "items": [
+      "volet[].VoletUniqueId",
+      "volet[].voletName",
+      "volet[].voletTopic",
+      "volet[].voletGroup"
+    ]
   }
 }
